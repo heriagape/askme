@@ -1,8 +1,8 @@
 const express   = require('express');
 const app       = express();
-const morgan    = require('morgan');
+// const morgan    = require('morgan');
 
-app.use(morgan('combined'));
+// app.use(morgan('combined'));
 
 require('./models/DBinit.js');
 
