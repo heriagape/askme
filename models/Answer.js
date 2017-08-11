@@ -1,3 +1,5 @@
+const Sequelize = require('sequelize');
+const sequelize = require('./ORM');
 
 const Answer = sequelize.define('answer', {
 
@@ -7,3 +9,4 @@ const Answer = sequelize.define('answer', {
 
 },{underscored: true});
 
+module.exports = Answer;

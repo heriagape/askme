@@ -1,3 +1,6 @@
+const Sequelize = require('sequelize');
+const sequelize = require('./ORM');
+
 const Question = sequelize.define('question', {
   question: {
     type: Sequelize.STRING
@@ -8,3 +11,5 @@ const Question = sequelize.define('question', {
   }
 },
 {underscored: true});
+
+module.exports = Question;

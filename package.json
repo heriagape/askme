@@ -24,7 +24,12 @@
   },
   "homepage": "https://github.com/heriagape/askme#readme",
   "dependencies": {
+    "bcrypt": "^1.0.2",
+    "body-parser": "^1.17.2",
+    "cookie-parser": "^1.4.3",
     "express": "^4.15.4",
+    "jsonwebtoken": "^7.4.2",
+    "morgan": "^1.8.2",
     "pg": "^7.1.0",
     "pg-hstore": "^2.3.2",
     "sequelize": "^4.4.3"
