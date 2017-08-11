@@ -15,12 +15,13 @@ router.post('/login', function (req, res) {
     var username = req.body.username;
     var password = req.body.password;
     var email = req.body.email;
+    console.log("Hello");
     User.findOne({ where: {
         $or: [{username: username}, {email: email}]
-    } }).then(function (err, user){
+    } }).then(function (err, user, password){
 
         if (err) throw err;
-        
+
         if (user.authenticate(password)) {
             var token = jwt.sign(user, app.get('superSecret'), {
                 expiresInMinutes: 1440 // expires in 24 hours

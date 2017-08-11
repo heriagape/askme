@@ -23,6 +23,7 @@ const User = sequelize.define('user', {
     type: Sequelize.STRING,
       unique: true,
     validate: {
+        notEmpty: true,
       is: ["^[a-z]+$",'i'],
       len: [4,10], }
   },
@@ -46,7 +47,7 @@ const User = sequelize.define('user', {
 
 },{
     freezeTableName: true,
-    indexes: [{unique: true, fields: ['email']}],
+    indexes: [{unique: true, fields: ['email', 'username']}],
     instanceMethods: {
         authenticate: function(value) {
             if (bcrypt.compareSync(value, this.password_digest))
@@ -79,6 +80,7 @@ User.beforeCreate(function(user, options, callback) {
 });
 User.beforeUpdate(function(user, options, callback) {
     user.email = user.email.toLowerCase();
+    user.username = user.username.toLowerCase();
     if (user.password)
         hasSecurePassword(user, options, callback);
     else

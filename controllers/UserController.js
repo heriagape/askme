@@ -46,13 +46,14 @@ router.get('/:username', function(req, res) {
 
 router.put('/:username', function(req, res) {
     var username = req.params.username;
-    var _token = req.body.token;
     User.findOne({ where: {username: username} }).then(function (user){
-        user.updateAttributes({
+        user.update({
             fname: req.body.fname,
             lname: req.body.lname,
             email: req.body.email,
-            username: req.body.username
+            username: req.body.username,
+            password: req.body.password,
+            password_confirmation: req.body.password_confirmation
         });
         res.json(user);
     });
@@ -60,7 +61,6 @@ router.put('/:username', function(req, res) {
 
 router.delete('/:username', function(req, res) {
     var username = req.params.username;
-    var _token = req.body.token;
     User.destroy({ where: {username: username} }).then(function (deleted){
         res.json({
             success: deleted,
