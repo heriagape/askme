@@ -22,5 +22,15 @@
   "bugs": {
     "url": "https://github.com/heriagape/askme/issues"
   },
-  "homepage": "https://github.com/heriagape/askme#readme"
+  "homepage": "https://github.com/heriagape/askme#readme",
+  "dependencies": {
+    "express": "^4.15.4",
+    "pg": "^7.1.0",
+    "pg-hstore": "^2.3.2",
+    "sequelize": "^4.4.2",
+    "sqlite3": "^3.1.9"
+  },
+  "engines": {
+    "node": "8.1.3"
+  }
 }
