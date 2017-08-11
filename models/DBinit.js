@@ -3,7 +3,7 @@ const Sequelize = require('sequelize');
 // $ npm install sqlite3 --build-from-source
 // const sequelize = new Sequelize('sqlite://database/database.db');
 
-const sequelize = new Sequelize('postgres://postgres:root@localhost:5432/askmedb');
+const sequelize = new Sequelize(HEROKU_POSTGRESQL_DBNAME_URL);
 
 sequelize.authenticate().then(function () {
     console.log('Connection has been established successfully.');
