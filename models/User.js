@@ -46,7 +46,7 @@ const User = sequelize.define('user', {
     }
 
 },{
-    freezeTableName: true,
+    // freezeTableName: false,
     indexes: [{unique: true, fields: ['email', 'username']}],
     instanceMethods: {
         authenticate: function(value) {
