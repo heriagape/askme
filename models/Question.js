@@ -1,7 +1,9 @@
 const Sequelize = require('sequelize');
 const sequelize = require('./ORM');
 
-const Question = sequelize.define('question', {
+var Question;
+
+Question = sequelize.define('question', {
   question: {
     type: Sequelize.STRING
   },

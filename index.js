@@ -1,14 +1,14 @@
-const express           = require('express');
-const app               = express();
-const morgan            = require('morgan');
-const apiRoutes         = express.Router();
-const webRoutes         = express.Router();
+const express = require('express');
+const app = express();
+const morgan = require('morgan');
+const apiRoutes = express.Router();
+const webRoutes = express.Router();
 
 //+++++++++Controller Methods+++++++++++++++++++++++++++++++++++++++++++++
-const users             = require('./controllers/UserController');
-const questions         = require('./controllers/QuestionController');
-const answers           = require('./controllers/AnswerController');
-const auth              = require('./controllers/AuthController');
+const users = require('./controllers/UserController');
+const questions = require('./controllers/QuestionController');
+const answers = require('./controllers/AnswerController');
+const auth = require('./controllers/AuthController');
 
 //========================================================================
 
@@ -29,16 +29,14 @@ app.use(morgan('tiny'));
 //========================================================================
 
 
-
-
-apiRoutes.use(function(req, res, next) {
+apiRoutes.use(function (req, res, next) {
 
     var token = req.body.token || req.query.token || req.headers['x-access-token'];
 
     if (token) {
 
         // verifies secret and checks exp
-        jwt.verify(token, app.get('superSecret'), function(err, decoded) {
+        jwt.verify(token, app.get('superSecret'), function (err, decoded) {
             if (err) {
                 return res.status(401).send({
                     success: false,
@@ -64,15 +62,12 @@ apiRoutes.use(function(req, res, next) {
 });
 
 
-
-
 app.use('/api', apiRoutes);
 app.use('/', webRoutes);
 
 
-
 apiRoutes.get('/', function (req, res) {
-    res.json({ message: 'Welcome to the coolest API on earth!' });
+    res.json({message: 'Welcome to the coolest API on earth!'});
 });
 
 
@@ -81,5 +76,5 @@ webRoutes.get('/', function (req, res) {
 });
 
 app.listen(3000, function () {
-  console.log('Example app listening on port 3000!');
+    console.log('Example app listening on port 3000!');
 });

@@ -27,11 +27,14 @@ router.get('/', function(req, res) {
 });
 
 router.post('/', function (req, res) {
+    // var data = req.body;
     User.create({
         fname: req.body.fname,
         lname: req.body.lname,
         email: req.body.email,
-        username: req.body.username
+        username: req.body.username,
+        password: req.body.password,
+        password_confirmation: req.body.password_confirmation
     }).then(function (user) {
         res.json(user);
     });
