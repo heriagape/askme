@@ -3,7 +3,7 @@ const sequelize = require('./ORM');
 const bcrypt = require('bcrypt');
 
 var User;
-var password_hash;
+
 
 User = sequelize.define('user', {
     fname: {

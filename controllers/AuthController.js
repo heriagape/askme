@@ -1,58 +1,50 @@
-const express = require('express');
-const router = express.Router();
-
-const bodyParser = require('body-parser');
-const cookieParser = require('cookie-parser');
+const CONFIG = require('../config/config');
 const jwt = require('jsonwebtoken');
 
-router.use(bodyParser.urlencoded({extended: true}));
-router.use(bodyParser.json());
-router.use(cookieParser());
-
-var SECRET = 'shhhhhhared-secret';
-
-
-
+var SECRET = CONFIG.JWT_SECRET;
 var User = require('../models/User');
 
-router.post('/login', function (req, res) {
-    var password = req.body.password;
-    var email = req.body.email;
+module.exports = function (router) {
 
-    User.findOne({where: {email: email}}).then(function (user) {
+    router.post('/login', function (req, res) {
+        var password = req.body.password;
+        var email = req.body.email;
 
-        // if (err) throw err;
-        // console.log(user.password_digest);
+        User.findOne({where: {email: email}}).then(function (user) {
 
-        if (user.authenticate(password)) {
-            // console.log(user.username);
+            // if (err) throw err;
+            // console.log(user.password_digest);
 
-            var tokenData = {
-                username: user.username,
-                email: user.email
-            };
+            if (user.authenticate(password)) {
+                // console.log(user.username);
 
-            var token = jwt.sign(tokenData, SECRET, {
-                expiresIn: '10s' // expires in 24 hours
-            });
-            res.json({
-                success: true,
-                message: 'Successful login',
-                token: token,
-                user: user
-            });
-        } else {
-            return res.status(401).send({
-                success: false,
-                message: 'Authentication failed.'
-            });
-        }
+                var tokenData = {
+                    username: user.username,
+                    email: user.email
+                };
+
+                var token = jwt.sign(tokenData, SECRET, {
+                    expiresIn: '2h' // expires in 24 hours
+                });
+                res.json({
+                    success: true,
+                    message: 'Successful login',
+                    token: token,
+                    user: user
+                });
+            } else {
+                return res.status(401).send({
+                    success: false,
+                    message: 'Authentication failed.'
+                });
+            }
+        });
     });
-});
 
-router.get('/hello', function (req, res) {
-    var username = req.params.username;
-    res.json({message: "test complted!"})
-});
+    router.get('/hello', function (req, res) {
+        var username = req.params.username;
+        res.json({message: "test complted!"})
+    });
 
-module.exports = router;
+    return router;
+};

@@ -1,8 +1,15 @@
+const CONFIG = require('./config/config');
 const express = require('express');
 const app = express();
+
+const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
+const jwt = require('jsonwebtoken');
+
 const morgan = require('morgan');
 const apiRoutes = express.Router();
 const webRoutes = express.Router();
+
 
 //+++++++++Controller Methods+++++++++++++++++++++++++++++++++++++++++++++
 const users = require('./controllers/UserController');
@@ -12,58 +19,34 @@ const auth = require('./controllers/AuthController');
 
 //========================================================================
 
-
-//+++++++++Using Controller Methods+++++++++++++++++++++++++++++++++++++++
-apiRoutes.use('/users', users);
-apiRoutes.use('/questions', questions);
-apiRoutes.use('/answers', answers);
-webRoutes.use('/', auth); // For Authentication stuff
-
+//+++++++++Middleware+++++++++++++++++++++++++++++++++++++++++++++
+const Auth_middleware = require('./middleware/Auth');
 
 //========================================================================
 
 
 //+++++++++App specific USES++++++++++++++++++++++++++++++++++++++++++++++
 app.use(morgan('tiny'));
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json());
+app.use(cookieParser());
+
+// app.use('/api', Auth_middleware); // route-level middleware
+app.use('/api', apiRoutes);
+app.use('/', webRoutes);
 
 //========================================================================
 
+//+++++++++Using Controller Methods+++++++++++++++++++++++++++++++++++++++
+// apiRoutes.use(Auth_middleware);
 
-apiRoutes.use(function (req, res, next) {
+apiRoutes.use('/users/', users(apiRoutes));
 
-    var token = req.body.token || req.query.token || req.headers['x-access-token'];
-
-    if (token) {
-
-        // verifies secret and checks exp
-        jwt.verify(token, app.get('superSecret'), function (err, decoded) {
-            if (err) {
-                return res.status(401).send({
-                    success: false,
-                    message: 'Authentication failed.'
-                });
-            } else {
-                // if everything is good, save to request for use in other routes
-                req.decoded = decoded;
-                next();
-            }
-        });
-
-    } else {
-        return res.status(403).send({
-            success: false,
-            message: 'Need to be Authenticated'
-        });
-    }
+webRoutes.use('/', auth(webRoutes)); // For Authentication stuff
 
 
-    console.log('Something is happening.');
-    next();
-});
+//========================================================================
 
-
-app.use('/api', apiRoutes);
-app.use('/', webRoutes);
 
 
 apiRoutes.get('/', function (req, res) {
@@ -75,6 +58,6 @@ webRoutes.get('/', function (req, res) {
     res.send('Hello World! - WebView');
 });
 
-app.listen(3000, function () {
+app.listen(CONFIG.PORT, function () {
     console.log('Example app listening on port 3000!');
 });

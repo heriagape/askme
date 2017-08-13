@@ -1,3 +1,8 @@
+var dotenv = require('dotenv');
+dotenv.load();
+
+//TODO: need to use the environment variables
+
 const Sequelize = require('sequelize');
 
 // $ npm install sqlite3 --build-from-source
