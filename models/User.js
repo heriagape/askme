@@ -3,6 +3,7 @@ const sequelize = require('./ORM');
 const bcrypt = require('bcrypt');
 
 var User;
+var password_hash;
 
 User = sequelize.define('user', {
     fname: {
@@ -75,29 +76,33 @@ User.prototype.authenticate = function(value) {
     } else return this;
 };
 
-var hasSecurePassword = function (user, options, callback) {
+var hasSecurePassword = function (user) {
+
     if (user.password != user.password_confirmation) {
         throw new Error("Password confirmation doesn't match Password");
     }
-    bcrypt.hash(user.get('password'), 10, function (err, hash) {
-        if (err) return callback(err);
-        console.log(user);
-        // user.password_digest = hash;
+
+    var hash = bcrypt.hashSync(user.password, 10);
+
+    // TODO: Preferably use Asynchronus hash function
+
+    /*bcrypt.hash(user.password, 10, function(err, hash) {
         user.set('password_digest', hash);
-        // user.save();
-        // console.log(user);
-        return callback(null, options);
-    });
+    });*/
+
+    user.set('password_digest', hash);
+
 };
 
-User.beforeCreate(function (user, options, callback) {
+User.beforeCreate(function (user) {
     user.email = user.email.toLowerCase();
     user.username = user.username.toLowerCase();
     // console.log(user);
-    if (user.password)
-        hasSecurePassword(user, options, callback);
-    else
+    if (user.password){
+        hasSecurePassword(user);
+    }else{
         throw new Error("Need to provide password");
+    }
 });
 
 User.beforeUpdate(function (user, options, callback) {
